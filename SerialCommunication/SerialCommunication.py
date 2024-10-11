@@ -21,13 +21,13 @@ ser = serial.Serial(port= portList[0],
 ############### Global Variables ###############
 sensorIdx = [4, 9, 14, 20, 25, 30]                      # 센서별 slicing index
 gaf = GramianAngularField(method= 'difference')         # 이미지 인코딩 객체
-trainedModel = load_model("")                           # 학습 모델 --> 모델 경로 입력
+trainedModel = load_model(r"C:\\Users\\hyukk\\Desktop\\SerialTest\\SerialCommunication\\Test0919_6Channel_Epoch_100.h5")                           # 학습 모델 --> 모델 경로 입력
 
 run = True                                              # 실행 제어 플래그 --> 추후 수정 필요
 
-meanSensorPath = ""                                     # Offset 값 저장 경로
+meanSensorPath = "OffsetValue.csv"                                     # Offset 값 저장 경로
 meanSensor = pd.read_csv(meanSensorPath, sep= ",")      # Offest 값 불러오기
-
+print(meanSensor)
 
 ############### Method ###############
 def execute_command():
@@ -63,13 +63,14 @@ inputThread.start()
 ############### 데이터 계측 및 예측 ###############
 predictResult = []
 
+
 while run:
     result = []                                                 # 수신 데이터 저장 배열 초기화
 
     while len(result) < 16:                                     # 수신 데이터 개수 16개 될때까지 실행
         data = ser.readline()                                   # ser 객체를 통해 데이터 읽기
         receive = data.decode('utf-8')                          # 수신한 데이터 utf-8로 변환
-        print(receive)
+        # print(receive)
 
         # 중간에 데이터 겹쳐 수신하는 경우 제외
         if len(receive) > 41:                                   # 수신 데이터의 길이 > 41인 경우
@@ -83,10 +84,14 @@ while run:
 
     sensors = np.array(sensors, dtype= np.float32).T            # 수신받은 데이터 (samples, sensor) 형태로 저장 ==> (sample, 6) 형태
     
+    
     ############### Offset 값 적용 ###############
-    sensors = pd.DataFrame(sensors, columns= [f"s{i}" for i in np.arange(1, 7, 1)])
-    calibed = [sensors.iloc[:, i] - meanSensor.iloc[i, 0] for i in range(6)]
-    calibed = pd.DataFrame(np.array(calibed).reshape(-1, 6), columns= [f's{i}' for i in np.arange(1, 7, 1)])
+    # sensors = pd.DataFrame(sensors, columns= [f"s{i}" for i in np.arange(1, 7, 1)])
+    # calibed = [sensors.iloc[:, i] - meanSensor.iloc[i, 1] for i in range(6)]
+    # calibed = pd.DataFrame(np.array(calibed).reshape(-1, 6), columns= [f's{i}' for i in np.arange(1, 7, 1)])
+    calibed = [sensors[:, i] - meanSensor.iloc[i, 1] for i in range(6)]
+    calibed = np.array(calibed).reshape(-1, 6)
+    
 
     ############### 이미지 인코딩 ###############
     encodeSensor = []                                           # 인코딩 결과 저장 리스트
@@ -98,7 +103,7 @@ while run:
     
     ############### 인코딩된 이미지 병합(concatenate) ###############
     concated = np.concatenate(encodeSensor, axis= 2).reshape(1, 16, 16, 6)
-    print(concated.shape)
+    # print(concated.shape)
 
     ############### 학습된 모델을 통해 드로그 위치 예측 ###############
     predictClass = np.argmax(trainedModel.predict(concated), axis= 1)

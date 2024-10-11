@@ -41,4 +41,4 @@ sensors = pd.DataFrame(sensors, columns= [f's{i}' for i in np.arange(1, 7, 1)])
 meanSensors = pd.DataFrame(sensors.mean(axis= 0))
 
 ############### Save Mean ###############
-# meanSensors.to_csv("InitialSensor.csv", sep= ",")
+meanSensors.to_csv("OffsetValue.csv", sep= ",")
