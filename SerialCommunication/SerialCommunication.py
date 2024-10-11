@@ -2,6 +2,7 @@ import time
 import serial
 import threading
 import numpy as np
+import pandas as pd
 
 from pyts.image import GramianAngularField
 from CheckSerialPort import getPortList
@@ -23,6 +24,9 @@ gaf = GramianAngularField(method= 'difference')         # 이미지 인코딩 �
 trainedModel = load_model("")                           # 학습 모델 --> 모델 경로 입력
 
 run = True                                              # 실행 제어 플래그 --> 추후 수정 필요
+
+meanSensorPath = ""                                     # Offset 값 저장 경로
+meanSensor = pd.read_csv(meanSensorPath, sep= ",")      # Offest 값 불러오기
 
 
 ############### Method ###############
@@ -79,6 +83,11 @@ while run:
 
     sensors = np.array(sensors, dtype= np.float32).T            # 수신받은 데이터 (samples, sensor) 형태로 저장 ==> (sample, 6) 형태
 
+    ############### Offset 값 적용 ###############
+    
+
+    
+    ############### 이미지 인코딩 ###############
     encodeSensor = []                                           # 인코딩 결과 저장 리스트
 
     for i in range(6):                                          # 센서 데이터 이미지 인코딩센서의 개수: 6
