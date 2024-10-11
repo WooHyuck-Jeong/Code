@@ -82,16 +82,17 @@ while run:
         sensors.append([r[i : i + 5] for r in result])          # sensorIdx에 저장된 idx에 따라 센서별 수신 데이터 저장
 
     sensors = np.array(sensors, dtype= np.float32).T            # 수신받은 데이터 (samples, sensor) 형태로 저장 ==> (sample, 6) 형태
-
+    
     ############### Offset 값 적용 ###############
-    
+    sensors = pd.DataFrame(sensors, columns= [f"s{i}" for i in np.arange(1, 7, 1)])
+    calibed = [sensors.iloc[:, i] - meanSensor.iloc[i, 0] for i in range(6)]
+    calibed = pd.DataFrame(np.array(calibed).reshape(-1, 6), columns= [f's{i}' for i in np.arange(1, 7, 1)])
 
-    
     ############### 이미지 인코딩 ###############
     encodeSensor = []                                           # 인코딩 결과 저장 리스트
 
     for i in range(6):                                          # 센서 데이터 이미지 인코딩센서의 개수: 6
-        s = sensors[:, i].reshape(-1, 1)
+        s = calibed[:, i].reshape(-1, 1)
         e = gaf.fit_transform(s.T).reshape(16, 16, 1)
         encodeSensor.append(e)                                  # 인코딩된 데이터 저장
     
