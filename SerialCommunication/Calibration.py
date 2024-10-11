@@ -38,7 +38,7 @@ sensors = np.array(sensors, dtype= np.float32).T        # (samples, sensor)
 
 ############### Calculate Mean ###############
 sensors = pd.DataFrame(sensors, columns= [f's{i}' for i in np.arange(1, 7, 1)])
-meanSensors = pd.DataFrame(sensors.mean(aixs= 0))
+meanSensors = pd.DataFrame(sensors.mean(axis= 0))
 
 ############### Save Mean ###############
-meanSensors.to_csv("InitialSensor.csv", sep= ",")
+# meanSensors.to_csv("InitialSensor.csv", sep= ",")
