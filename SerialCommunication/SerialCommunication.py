@@ -8,6 +8,12 @@ from pyts.image import GramianAngularField
 from CheckSerialPort import getPortList
 from keras.models import load_model
 
+"""
+TO DO
+1. (16, 16, 3) 두 개로 concatenate -> predict 코드 수정
+2. Offset value 적용 코드 수정
+"""
+
 # Serial Port 연결 및 객체 생성
 portList = getPortList()
 print(portList)
