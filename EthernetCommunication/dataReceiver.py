@@ -2,7 +2,7 @@ import socket
 
 # 수신할 포트 번호
 UDP_IP = "0.0.0.0"      # 모든 네트워크 인터페이스에서 수신 허용
-UDP_PORT = "5000"       # 라즈베리파이 설정 포트와 동일하게 설정
+UDP_PORT = 5000       # 라즈베리파이 설정 포트와 동일하게 설정
 
 # UDP 소켓 생성
 sock = socket.socket(
