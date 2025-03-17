@@ -11,12 +11,12 @@ sock = socket.socket(
     socket.SOCK_DGRAM
 )
 
-count = 1
+data = 101
 try:
     while True:
-        message = str(count).encode()
+        message = str(data).encode()
         sock.sendto(message, (UDP_IP, UDP_PORT))
-        print(f"Send: {count}")
+        print(f"Send: $000-0740-0664+0027,+0989+0571+{data},1,0")
         count += 1
         time.sleep(1)
 except KeyboardInterrupt:
