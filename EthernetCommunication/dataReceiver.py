@@ -17,7 +17,7 @@ print(f"포트 {UDP_PORT}에서 데이터 수신 대기 중...")
 try:
     while True:
         data, addr = sock.recvfrom(1024)    # 최대 1024 바이트 수신
-        print(f"수신 [{addr}]: {data.decode()}")
+        print(f"Received: $000-0740-0664+0027,+0989+0571+{data},1,0")
 except KeyboardInterrupt:
     print("\n수신 종료")
 finally:
